@@ -1,106 +1,698 @@
-# AURA-landing-page-
-# landing-page
-Responsive product landing page built with pure HTML &amp; CSS. No frameworks. Grid, Flexbox, custom properties, and a CSS animation.
-# AURA — Product Landing Page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA — Smart Ambient Light</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
 
-A responsive product landing page built with pure HTML and CSS. No frameworks, no JavaScript — just clean, intentional markup and layout.
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-This was built as a frontend practice project to demonstrate real-world page structure: fixed navigation, a hero section, a feature grid using CSS Grid, a specs layout using Flexbox, and a footer. The fictional product is a smart ambient lamp called AURA.
+    :root {
+      --bg:        #0A0A0F;
+      --bg-alt:    #111118;
+      --text:      #F0EBE1;
+      --muted:     #6B6B80;
+      --accent:    #E8C97A;
+      --accent-dim:#A8894A;
+      --border:    rgba(240, 235, 225, 0.08);
+    }
 
----
+    html { scroll-behavior: smooth; }
 
-## Live Preview
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
 
-> Open `market.html` directly in any browser — no build step, no dependencies.
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 60px;
+      background: rgba(10, 10, 15, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
 
----
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-decoration: none;
+    }
 
-## What's in it
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
 
-```
-aura-landing-page/
-└── index.html       ← the entire project, self-contained
-```
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
 
-All CSS is written inside a `<style>` block in the `<head>`. Google Fonts are loaded via CDN (`Cormorant Garamond` + `Inter`). No external CSS files, no JS libraries.
+    .nav-links a:hover { color: var(--text); }
 
----
+    .nav-cta {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      cursor: pointer;
+      transition: background 0.25s, color 0.25s;
+    }
 
-## Page structure
+    .nav-cta:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
 
-| Section | Purpose | Technique used |
-|---|---|---|
-| `<nav>` | Fixed top navigation with logo, links, and CTA | `position: fixed`, `backdrop-filter` |
-| `.hero` | Full-viewport hero with headline, subtext, and inline SVG lamp | `min-height: 100vh`, CSS keyframe animation |
-| `.features` | 3-column feature grid | `CSS Grid` — `grid-template-columns: repeat(3, 1fr)` |
-| `.specs` | Two-column specs breakdown | `CSS Flexbox` — `display: flex` with `gap` |
-| `.testimonial` | Single pull-quote section | Centered layout, `Cormorant Garamond` italic |
-| `.cta-band` | Pre-order call-to-action | Centered text, button styling |
-| `<footer>` | Logo, links, copyright | `Flexbox` with `justify-content: space-between` |
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px 40px 100px;
+      overflow: hidden;
+    }
 
----
+    /* The signature element: breathing amber glow */
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -52%);
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center,
+        rgba(232, 201, 122, 0.18) 0%,
+        rgba(232, 201, 122, 0.07) 45%,
+        transparent 70%
+      );
+      animation: breathe 5s ease-in-out infinite;
+      pointer-events: none;
+    }
 
-## Key concepts practiced
+    @keyframes breathe {
+      0%, 100% { transform: translate(-50%, -52%) scale(1);   opacity: 0.8; }
+      50%       { transform: translate(-50%, -52%) scale(1.18); opacity: 1;   }
+    }
 
-- **CSS Grid** for the 3-column feature section (`repeat(3, 1fr)`)
-- **CSS Flexbox** for the nav, specs layout, hero actions, and footer
-- **CSS custom properties** (`--bg`, `--accent`, `--muted`, etc.) for a consistent design token system
-- **Fixed positioning** with `backdrop-filter: blur()` for a glassmorphism navbar
-- **CSS keyframe animation** (`@keyframes breathe`) for the hero glow pulse
-- **`clamp()`** for fluid typography that scales between viewport sizes
-- **Responsive layout** with a single `@media (max-width: 900px)` breakpoint
-- **`prefers-reduced-motion`** media query — animation is disabled for users who prefer it
-- **Inline SVG** for the lamp illustration and feature icons (no image files needed)
-- **Google Fonts via CDN** — `Cormorant Garamond` (display) + `Inter` (body)
+    @media (prefers-reduced-motion: reduce) {
+      .hero-glow { animation: none; }
+    }
 
----
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      position: relative;
+    }
 
-## Design decisions
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.4rem, 7vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.04;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      position: relative;
+      max-width: 820px;
+    }
 
-The page uses a dark editorial aesthetic — `#0A0A0F` near-black background, warm off-white body text, and a single amber accent (`#E8C97A`) pulled from the product's own world (lamplight). Two typefaces only: a high-contrast serif for headlines and a geometric sans for everything else.
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
 
-The hero glow animation is the one deliberate design risk — it animates like actual lamplight breathing, slow and ambient. Everything else on the page is quiet.
+    .hero-sub {
+      margin-top: 28px;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 440px;
+      position: relative;
+      line-height: 1.75;
+    }
 
----
+    .hero-actions {
+      margin-top: 48px;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      position: relative;
+    }
 
-## How to run
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      cursor: pointer;
+      transition: opacity 0.25s;
+    }
 
-```bash
-git clone https://github.com/your-username/aura-landing-page.git
-cd aura-landing-page
-open index.html         # macOS
-# or just double-click index.html in your file explorer
-```
+    .btn-primary:hover { opacity: 0.86; }
 
-No installs. No `npm`. No config files.
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.25s;
+    }
 
----
+    .btn-ghost:hover { color: var(--text); }
 
-## Screenshot
+    .btn-ghost-arrow {
+      display: inline-block;
+      transition: transform 0.25s;
+    }
 
-> *(Add a screenshot here — drag and drop into the GitHub repo's README editor, or use a tool like [Screely](https://screely.com) to create a clean mockup)*
+    .btn-ghost:hover .btn-ghost-arrow { transform: translateX(4px); }
 
----
+    /* mock lamp illustration */
+    .hero-visual {
+      position: relative;
+      margin-top: 70px;
+    }
 
-## What I'd add next
+    .lamp-svg {
+      width: 180px;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 28px rgba(232,201,122,0.35));
+    }
 
-- Scroll-triggered reveal animations using the Intersection Observer API
-- A working email capture form (Formspree or Netlify Forms)
-- Dark/light mode toggle
-- CSS `:has()` experiments for the feature card hover states
-- Semantic improvements: `<main>`, `<article>`, ARIA landmarks
+    /* ─── SECTION DIVIDER ─── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
 
----
+    /* ─── FEATURES ─── */
+    .features {
+      padding: 110px 60px;
+      background: var(--bg-alt);
+    }
 
-## Built with
+    .section-label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      text-align: center;
+    }
 
-- HTML5
-- CSS3 (Grid, Flexbox, custom properties, animations)
-- [Google Fonts](https://fonts.google.com/) — Cormorant Garamond + Inter
-- No JavaScript. No frameworks. No build tools.
+    .section-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 70px;
+      line-height: 1.18;
+    }
 
----
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
 
-## License
+    .feature-card {
+      background: var(--bg);
+      padding: 52px 44px;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
 
-MIT — use it however you like.
+    .feature-card:hover {
+      border-color: rgba(232, 201, 122, 0.25);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 28px;
+      opacity: 0.9;
+    }
+
+    .feature-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .feature-desc {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ─── SPECS ─── */
+    .specs {
+      padding: 110px 60px;
+      background: var(--bg);
+    }
+
+    .specs-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .specs-copy { flex: 1; }
+
+    .specs-copy .section-label { text-align: left; }
+    .specs-copy .section-heading { text-align: left; margin-bottom: 28px; }
+
+    .specs-body {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 40px;
+    }
+
+    .specs-table {
+      flex: 1;
+      border-top: 1px solid var(--border);
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spec-key {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .spec-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    /* ─── TESTIMONIAL ─── */
+    .testimonial {
+      padding: 100px 60px;
+      background: var(--bg-alt);
+      text-align: center;
+    }
+
+    .testimonial blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text);
+      max-width: 780px;
+      margin: 0 auto 28px;
+      line-height: 1.35;
+    }
+
+    .testimonial cite {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    /* ─── CTA BAND ─── */
+    .cta-band {
+      padding: 120px 60px;
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .cta-band h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .cta-band h2 em {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .cta-band p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 44px;
+    }
+
+    .price-tag {
+      display: inline-block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .price-tag strong {
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--text);
+      margin-left: 6px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      background: var(--bg-alt);
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 18px 28px; }
+      .nav-links { display: none; }
+
+      .hero { padding: 120px 28px 80px; }
+      .hero-glow { width: 320px; height: 320px; }
+
+      .features { padding: 80px 28px; }
+      .features-grid { grid-template-columns: 1fr; gap: 2px; }
+
+      .specs { padding: 80px 28px; }
+      .specs-inner { flex-direction: column; gap: 48px; }
+
+      .testimonial { padding: 80px 28px; }
+      .cta-band { padding: 80px 28px; }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 40px 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">AURA</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#specs">Specs</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <button class="nav-cta">Pre-order — $129</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+
+    <p class="hero-eyebrow">Introducing — Spring 2025</p>
+
+    <h1>Light that <em>listens</em><br>to the room.</h1>
+
+    <p class="hero-sub">
+      AURA reads your environment, your habits, and the hour — then adjusts itself.
+      Not a smart bulb. A living atmosphere.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn-primary">Reserve yours</button>
+      <button class="btn-ghost">
+        See how it works <span class="btn-ghost-arrow">→</span>
+      </button>
+    </div>
+
+    <!-- SVG Lamp Illustration -->
+    <div class="hero-visual">
+      <svg class="lamp-svg" viewBox="0 0 180 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AURA lamp illustration">
+        <!-- Glow orb -->
+        <ellipse cx="90" cy="82" rx="46" ry="46" fill="url(#glow_radial)" opacity="0.9"/>
+        <!-- Shade upper cone -->
+        <path d="M54 100 L70 148 L110 148 L126 100 Q90 88 54 100Z" fill="#E8C97A" opacity="0.15"/>
+        <path d="M54 100 L70 148 L110 148 L126 100 Q90 92 54 100Z" stroke="#E8C97A" stroke-width="0.8" opacity="0.5"/>
+        <!-- Shade rim -->
+        <ellipse cx="90" cy="148" rx="20" ry="4" fill="#E8C97A" opacity="0.3"/>
+        <!-- Stem -->
+        <line x1="90" y1="152" x2="90" y2="226" stroke="#6B6B80" stroke-width="2" stroke-linecap="round"/>
+        <!-- Base disk -->
+        <ellipse cx="90" cy="228" rx="34" ry="7" fill="#1A1A26"/>
+        <ellipse cx="90" cy="226" rx="30" ry="5.5" fill="#252530"/>
+        <!-- Light bulb center glow -->
+        <circle cx="90" cy="82" r="18" fill="url(#bulb_glow)" opacity="0.7"/>
+        <circle cx="90" cy="82" r="8" fill="#FFFAE8" opacity="0.85"/>
+        <defs>
+          <radialGradient id="glow_radial" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#E8C97A" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#E8C97A" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="bulb_glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFFAE8" stop-opacity="0.9"/>
+            <stop offset="70%" stop-color="#E8C97A" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#E8C97A" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <span class="section-label">What makes it different</span>
+    <h2 class="section-heading">Designed for the way<br>rooms actually live.</h2>
+
+    <div class="features-grid">
+      <!-- Card 1 -->
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="21" cy="21" r="20" stroke="#E8C97A" stroke-width="0.8" opacity="0.3"/>
+          <circle cx="21" cy="21" r="8" fill="#E8C97A" opacity="0.2"/>
+          <circle cx="21" cy="21" r="3.5" fill="#E8C97A" opacity="0.9"/>
+          <line x1="21" y1="5" x2="21" y2="9" stroke="#E8C97A" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <line x1="21" y1="33" x2="21" y2="37" stroke="#E8C97A" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <line x1="5" y1="21" x2="9" y2="21" stroke="#E8C97A" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <line x1="33" y1="21" x2="37" y2="21" stroke="#E8C97A" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+        <h3 class="feature-title">Ambient sensing</h3>
+        <p class="feature-desc">A light sensor reads your room's natural light every 90 seconds. AURA adjusts its warmth and brightness to complement — not compete with — what's already there.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="6" y="14" width="30" height="18" rx="1.5" stroke="#E8C97A" stroke-width="0.8" opacity="0.4"/>
+          <line x1="6" y1="19" x2="36" y2="19" stroke="#E8C97A" stroke-width="0.6" opacity="0.3"/>
+          <circle cx="11" cy="16.5" r="1.2" fill="#E8C97A" opacity="0.5"/>
+          <circle cx="15" cy="16.5" r="1.2" fill="#E8C97A" opacity="0.5"/>
+          <path d="M10 27 Q21 22 32 27" stroke="#E8C97A" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/>
+          <line x1="21" y1="32" x2="21" y2="36" stroke="#E8C97A" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+          <line x1="15" y1="36" x2="27" y2="36" stroke="#E8C97A" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <h3 class="feature-title">Learns your rhythm</h3>
+        <p class="feature-desc">After two weeks, AURA understands your morning light, your evening wind-down, and the focused afternoon stretch. It transitions without being asked.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M21 7 L24.5 16.5 L35 16.5 L26.5 22.5 L30 32 L21 26 L12 32 L15.5 22.5 L7 16.5 L17.5 16.5 Z" stroke="#E8C97A" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <path d="M21 11 L23.5 18 L31 18 L25 22 L27.5 29 L21 25 L14.5 29 L17 22 L11 18 L18.5 18 Z" fill="#E8C97A" opacity="0.12"/>
+        </svg>
+        <h3 class="feature-title">No-app setup</h3>
+        <p class="feature-desc">Plug in. Done. There is no app, no Wi-Fi pairing ritual, no firmware update on arrival. The single touch-sensitive base handles everything you'd ever want to change.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- SPECS -->
+  <section class="specs" id="specs">
+    <div class="specs-inner">
+      <div class="specs-copy">
+        <span class="section-label">Under the shade</span>
+        <h2 class="section-heading">Built to last a<br>decade, quietly.</h2>
+        <p class="specs-body">
+          We obsessed over heat management so the lumen output doesn't drift after a year. The matte aluminum base doesn't scratch. The cord is braided linen — not because it's trendy, but because it's the material that ages best on a desk.
+        </p>
+        <button class="btn-primary">Reserve yours — $129</button>
+      </div>
+
+      <div class="specs-table">
+        <div class="spec-row">
+          <span class="spec-key">Light source</span>
+          <span class="spec-val">Full-spectrum LED array</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Color temp range</span>
+          <span class="spec-val">2700 K – 5600 K</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Brightness</span>
+          <span class="spec-val">800 lm (adjustable)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Sensing interval</span>
+          <span class="spec-val">Every 90 seconds</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Power draw</span>
+          <span class="spec-val">12 W at full output</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Materials</span>
+          <span class="spec-val">Matte aluminium · linen cord</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Dimensions</span>
+          <span class="spec-val">Ø 14 cm × 46 cm H</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Warranty</span>
+          <span class="spec-val">5 years, no questions</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- TESTIMONIAL -->
+  <section class="testimonial" id="about">
+    <blockquote>
+      "I stopped noticing it was smart. I just noticed the room felt better."
+    </blockquote>
+    <cite>— Early tester, Copenhagen</cite>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- CTA BAND -->
+  <section class="cta-band">
+    <h2>Reserve yours.<br><em>Ships April 2025.</em></h2>
+    <p>Limited first run. No payment until it ships.</p>
+    <div>
+      <div class="price-tag">Starting at <strong>$129</strong></div>
+    </div>
+    <br />
+    <button class="btn-primary">Pre-order now</button>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">AURA</div>
+    <ul class="footer-links">
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Shipping</a></li>
+      <li><a href="#">Press</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Aura Lighting Co. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
